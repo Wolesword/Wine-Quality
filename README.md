@@ -1,4 +1,4 @@
-https://raw.githubusercontent.com/Wolesword/Wine-Quality/main/Wine.png
+![image](https://user-images.githubusercontent.com/75275475/112500799-12197580-8d5f-11eb-9669-81a3de15ee99.png)
 
 # Wine Quality Prediction
 
