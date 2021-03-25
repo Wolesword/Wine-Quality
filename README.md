@@ -86,6 +86,7 @@ Output variable (based on sensory data):
 # read data set
 # wine_data = pd.read_csv("Data set/winequality-white.csv",sep=";" , encoding= 'unicode_escape')
 
+```python
 from google.colab import drive
 drive.mount('/content/drive') 
 
@@ -101,6 +102,7 @@ print(wine_data.info())
 
 # get information on the numerical columns for the data set
 wine_data.describe(include='all')
+```
 
 ## 4. Data Cleaning
 The Data cleaning was seen to be instrumental in improving the quality of the modeling. Outliers were thus removed from the dataset.
