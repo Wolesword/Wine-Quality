@@ -1,3 +1,6 @@
+
+![pull request image](https://github.com/Wolesword/Wine-Quality/edit/main/Wine.PNG)
+
 # Wine Quality Prediction
 
 ## Technology and Resources Used
