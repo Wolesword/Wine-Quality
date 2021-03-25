@@ -1,4 +1,4 @@
-![wine.png](attachment:wine.png)
+![wine.png](attachment:Wine.png)
 
 # Wine Quality Prediction
 
