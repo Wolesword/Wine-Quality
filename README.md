@@ -82,11 +82,11 @@ Output variable (based on sensory data):
 12. - quality (score between 0 and 10)
 
 ### 3.4 Greet the data
-
+```python
 # read data set
 # wine_data = pd.read_csv("Data set/winequality-white.csv",sep=";" , encoding= 'unicode_escape')
 
-```python
+
 from google.colab import drive
 drive.mount('/content/drive') 
 
@@ -108,7 +108,7 @@ wine_data.describe(include='all')
 The Data cleaning was seen to be instrumental in improving the quality of the modeling. Outliers were thus removed from the dataset.
 
 ### 4.1 IQR method
-
+```python
 def remove_outliers_iqr(df):
     dataf = pd.DataFrame(df)
     quartile_1, quartile_3 = np.percentile(dataf, [5,95])
@@ -123,11 +123,12 @@ def remove_outliers_iqr(df):
     print("# of outliers:", len(np.where((dataf > upper_bound) | (dataf < lower_bound))[0]))
 
     return dataf[~((dataf < lower_bound) | (dataf > upper_bound)).any(axis=1)]
-
+```
 ### 4.2 Removal of  outliers in the top 5%
 Top 5% means here the values that are out of the 95th percentile of data.
 
 # Sample outlier plot
+```python
 sns.boxplot(x=wine_data['volatile acidity'])
 plt.show()
 
@@ -145,26 +146,26 @@ wine_data['sulphates'] = remove_outliers_iqr(wine_data['sulphates'])
 wine_data['alcohol'] = remove_outliers_iqr(wine_data['alcohol'])
 
 **NOTE**: Removing outliers improved the performance of most of the models by about 2%. The range of the quartile was determined at 95% to not bear a great cost on the amount of observations taken from the data. In total **91 outliers were removed**.
-
+```
 ### 4.3 drop null values
 There are no nulls in our dataset.
-
+```python
 wine_data = wine_data.dropna()
 sns.heatmap(wine_data.isnull()); # No nulls
 
 wine_data.info()
-
+```
 ### 4.4 Output to CSV
 Output cleaned data to CSV for keeps. This is done because after dropping the information of the missed entries remains on the dataset and would influence a merger during feature engineering operations.
-
+```python
 
 wine_data.to_csv('/content/drive/MyDrive/Colab Notebooks/Datasets/white_data_cleaned.csv',index = False)
-
+```
 ## 5. Data Exploration
 This section explores the distribution of each variable using cleaned data set.
 
 ### 5.1 Visualisation and correlation helper methods
-
+```python
 def plotHist(xlabel, title, column):
     fig, ax = plt.subplots(1, 1, 
                            figsize =(8, 5),  
@@ -227,26 +228,26 @@ plotHist("Alcohol", "Histogram of number of entries per number of pH", wine_data
 
 print('pH level:\n', wine_data.pH.value_counts(sort=False));
 plotHist("pH", "Histogram of number of entries per number of pH", wine_data.pH);
-
+```
 ### 5.2 Group
-
+```
 print('Quality:\n', wine_data['quality'].value_counts(sort=False))
 plotBar("Result (1 = positive, 0 = negative)", "Wine results", wine_data['quality'])
 
 Here we see that the response is actualy divided into 6 classes and that no variable is associated with the values 1.2
-
+```
 ### 5.3 Correlation heatmap
 
 correlation_heatmap(wine_data)
 
 ### 5.4 Pair plot
 
-
+```python
 # sns.pairplot(wine_data, hue = 'quality')
 # plt.show()
-
+```
 ### 5.5 Pivot Table
-
+```python
 
 # Getting my columns
 wine_data.columns
@@ -259,7 +260,7 @@ print(pivot_table2)
 
 pivot_table3 = pd.pivot_table(wine_data, index = 'quality', values = ['pH', 'sulphates', 'alcohol'])
 print(pivot_table3)
-
+```
 ## 6. Feature Engineering
 
 ### 6.1 Exploration of new features
@@ -268,11 +269,11 @@ Creating features which may help the decision making
 
 
 ### 6.1 Dataset cleaned
-
+```python
 wine_data = pd.read_csv('/content/drive/MyDrive/Colab Notebooks/Datasets/white_data_cleaned.csv', encoding= 'unicode_escape')
-
+```
 ### 6.2 Setting the response into four categories. 
-
+```python
 # define x, y
 X = wine_data.drop(['quality'], axis = 1)
 y_real = wine_data['quality']
@@ -302,9 +303,9 @@ regressor = SVC(gamma='auto')
 regressor.fit(X_train, y_train)
 y_pred = regressor.predict(X_test)
 print('The MSE for the SVM is: ', metrics.mean_squared_error(y_test, y_pred))
-
+```
 ### 6.3 New features
-
+```python
 X['alcohol_square'] = X['alcohol']*X['alcohol']
 X['sulphates_square'] = X['pH']*X['sulphates']
 
@@ -374,11 +375,11 @@ print('The MSE for the SVM is: ',metrics.mean_squared_error(y_test, y_pred))
 
 <span style="color:red">**Important Note**</span> <br>
 <span style="color:red">From the quick checks using SVM which is quick in its process, we can see a slight reduction in the MSE . Therefore, though these steps in feature engineering seem to brings some improvement in the fit of the model, it still does  not considerably improve the trend in the results. The next steps will be to evaluate other evaluation models.</span>
-
+```
 ### 6.4 Model Selection
 From model chart here, we can see that the categorical feature added through feature engineering does not improve the model. This will therefore not be included in our result. 
 We will also observed, if a small subset of more correlated features will not be sufficient to predict the class.
-
+```python
 from sklearn.ensemble import ExtraTreesRegressor
 etr = ExtraTreesRegressor()
 etr.fit(X,y)
@@ -392,9 +393,9 @@ plt.show()
 # define x, y
 # X = wine_data.drop(['quality'], axis = 1) 
 # X = X.drop(['Category', 'density', 'normalized', 'fixed acidity', 'alcohol_normalized'], axis = 1)
-
+```
 ### 6.5 Split into Training and Testing Data
-
+```python
 # split into train test
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 16)
 
@@ -404,7 +405,7 @@ sel.fit(X_train, y_train)
 selected_feat = X_train.columns[(sel.get_support())]
 print('The number of selected features:', len(selected_feat))
 print('The selected features are:', pd.DataFrame(selected_feat))
-
+```
 ## 7. Model Building
 Train the models and use cross validation score for the accuracy.
 
@@ -419,7 +420,7 @@ Train the models and use cross validation score for the accuracy.
 
 ### 7.1 Naive Bayes
 
-
+```python
 
 from sklearn.naive_bayes import GaussianNB
 nb = GaussianNB()
@@ -440,10 +441,10 @@ plt.plot(estimators, scores1);
 
 print('Accuracy Score: {}'.format(round(scores1[np.argmax(scores1)], 3)))
 print('best Regularization of var_smoothing: {}'.format(round(np.arange(1e-09, 1e-06, 1e-09)[np.argmax(scores1)],10)))
-
+```
 
 ### 7.2 Logistic Regression
-
+```python
 lr = LogisticRegression(max_iter = 100000)
 cv = cross_val_score(lr, X_train, y_train,cv=5)
 print(cv)
@@ -462,11 +463,10 @@ plt.plot(estimators, scores1);
 
 print('Accuracy Score: {}'.format(round(scores1[np.argmax(scores1)], 3)))
 print('best Regularization parameter C: {}'.format(round(np.arange(1, 10, 1)[np.argmax(scores1)],2)))
-
+```
 ### 7.3 K-Neaserst Neighbors
 
-
-
+```python
 from sklearn.neighbors import KNeighborsClassifier
 KNN = KNeighborsClassifier()
 cv = cross_val_score(KNN, X_train, y_train, cv=5)
@@ -493,10 +493,10 @@ print('best Regularization n_neighbors: {}'.format(round(np.arange(1, 16, 1)[np.
 2. Random Forest
 3. Gradient Boosting
 </span>
-
+```
 ### 7.4 Decision Tree
 
-
+```python
 dt = tree.DecisionTreeClassifier(random_state = 1)
 cv = cross_val_score(dt, X_train, y_train, cv=5)
 print(cv)
@@ -515,11 +515,11 @@ plt.plot(estimators, scores1);
 
 print('Accuracy Score: {}'.format(round(scores1[np.argmax(scores1)], 3)))
 print('best Regularization parameter min_samples_leaf: {}'.format(round(np.arange(1, 10, 1)[np.argmax(scores1)],2)))
-
+```
 ### 7.5 Bagging
 
 
-
+```python
 from sklearn.ensemble import BaggingClassifier
 bag = BaggingClassifier(dt, random_state=1)
 cv = cross_val_score(bag, X_train, y_train, cv=5)
@@ -539,11 +539,11 @@ plt.plot(estimators, scores1);
 
 print('Accuracy Score: {}'.format(round(scores1[np.argmax(scores1)], 3)))
 print('best Regularization n_estimators: {}'.format(round(np.arange(10, 200, 10)[np.argmax(scores1)],2)))
-
+```
 ### 7.6 Gradient Boosting
 
 
-
+```python
 from sklearn.ensemble import GradientBoostingClassifier
 gb = GradientBoostingClassifier(random_state=1)
 cv = cross_val_score(gb, X_train, y_train, cv=5)
@@ -563,11 +563,11 @@ plt.plot(estimators, scores1);
 
 print('Accuracy Score: {}'.format(round(scores1[np.argmax(scores1)], 3)))
 print('best Regularization n_estimators: {}'.format(round(np.arange(50, 350, 10)[np.argmax(scores1)],2)))
-
+```
 ### 7.7 Random Forest
 
 
-
+```python
 rf = RandomForestClassifier(random_state = 1)
 cv = cross_val_score(rf, X_train, y_train, cv=5)
 print(cv)
@@ -587,7 +587,7 @@ plt.plot(estimators, scores1);
 
 print('Accuracy Score: {}'.format(round(scores1[np.argmax(scores1)], 3)))
 print('best Regularization parameter estimators: {}'.format(round(np.arange(10, 300, 10)[np.argmax(scores1)],2)))
-
+```
 ## 8. More Hyperparameter Tuning
 
 
@@ -596,7 +596,7 @@ print('best Regularization parameter estimators: {}'.format(round(np.arange(10, 
 
 * `max_depth` : int or None, optional (default=None) or Maximum Depth of a Tree: The maximum depth of the tree. If None, then nodes are expanded until all the leaves contain less than min_samples_split samples. The higher value of maximum depth causes overfitting, and a lower value causes underfitting (Source).
 
-
+```python
 gini_acc_scores = []
 entropy_acc_scores = []
 
@@ -634,10 +634,10 @@ dt = dt.fit(X_train, y_train)
 y_predict = dt.predict(X_test)
 
 print("Accuracy:", accuracy_score(y_test, y_predict))
-
+```
 ### 8.2 Random forest Multi-hyperparameter tuning
 The results indicate that the other hyperparameters do not significantly improve the prediction. The hyperparameters of importance are the number of estimators and the depth of the tree
-
+```python
 [int(x) for x in np.linspace(start = 100, stop = 300, num = 10)]
 
 # Number of trees in random forest
@@ -689,10 +689,10 @@ best_grid = grid_search.best_estimator_
 grid_accuracy = evaluate(best_grid, X_test, y_test)
 
 The results indicate that the other hyperparameters do not significantly improve the prediction.
-
+```
 
 ### 8.3 Fine tuning the Random Forest Classifier
-
+```python
 acc_scores = []              
 depth = [int(x) for x in np.arange(1, 35, 1)]
 depth.append(None)
@@ -717,10 +717,10 @@ rf.fit(X_train,y_train)
 
 y_predict = rf.predict(X_test)
 print("Accuracy:", accuracy_score(y_test, y_predict))
-
+```
 
 ### 8.4 Tuning the Gradient Boosting Classifier
-
+```python
 acc_scores = []              
 depth = np.arange(1, 16)
 
@@ -744,7 +744,7 @@ rf.fit(X_train,y_train)
 
 y_predict = rf.predict(X_test)
 print("Accuracy:", accuracy_score(y_test, y_predict))
-
+```
 # Conclusion:
 
 From the following analysis we have done the following. 
