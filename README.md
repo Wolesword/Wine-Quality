@@ -42,7 +42,7 @@ Available at: https://archive.ics.uci.edu/ml/datasets/wine+quality
 
 ### 3.1 Import Libraries
 The following code is written in Python 3.7.7. Below is the list of libraries used.
-
+```python
 # !pip install lux-api
 import numpy as np 
 import pandas as pd
@@ -51,10 +51,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import lux
 # %config Completer.use_jedi = False # to activate autocomplete assistance, disable jedi
-
+```
 ### 3.2 Load Data Modeling Libraries
 These are the most common machine learning and data visualization libraries.
-
+```python
 # Model Algorithms
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
 from sklearn.linear_model import LogisticRegression
@@ -63,7 +63,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 # Model Helpers
 from sklearn.metrics import accuracy_score, mean_squared_error, confusion_matrix
-
+```
 ### 3.3 Data dictionary
 The data dictionary for the data set is as follows:<br>
 Input variables (based on physicochemical tests):
