@@ -1,4 +1,4 @@
-![wine.png](attachment:Wine.png)
+https://raw.githubusercontent.com/Wolesword/Wine-Quality/main/Wine.png
 
 # Wine Quality Prediction
 
